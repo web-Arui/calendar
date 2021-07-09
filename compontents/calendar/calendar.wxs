@@ -1,0 +1,117 @@
+function lwstart(event,ins){
+  // 获取事件触发点的坐标数据
+  var touch = event.touches[0] || event.changedTouches[0]
+  //存储坐标数据，后期使用
+  var moveE = ins.getState();
+  moveE.startX = touch.pageX;
+  moveE.startY = touch.pageY;
+
+  //默认左滑当前的距离，也要存储起来
+  if (!moveE.rY) {
+    moveE.rY = 0;
+  }
+  
+}
+// 拖动中时的事件
+function lwmove(event, ins) {
+  //获取到该组件的id
+  var id = event.currentTarget.dataset.id;
+  //组件实例
+  var node = ins.selectComponent('#move1');
+  if(node){
+
+    // 获取拖动点的坐标数据
+    var touch = event.touches[0] || event.changedTouches[0]
+    //拿出拖动开始时存储的数据
+    var moveE = ins.getState();
+
+    //计算拖动点与拖动开始时的触发点之间的横坐标之差
+    var gap = touch.pageY - moveE.startY;
+
+    //获取左滑的距离（拖动中不存储这个数据，而是拖动结束来存储这个数据）
+    var top = moveE.rY;
+
+    //为向左滑动做处理，开始设置左滑的距离
+    // if (gap < 0) {
+    //   // 设置组件向左滑的距离
+    //   node.setStyle({
+    //     "transform": "translateX(" + (gap + left) + "px)"
+    //   })
+    // }
+
+    // console.log("拖动中", (gap + left));
+  }
+}
+
+// 拖动结束时的事件
+function lwend(event, ins) {
+  // console.log("拖动结束");
+
+  //获取到该组件的id
+  var id = event.currentTarget.dataset.id;
+  //组件实例
+  var node = ins.selectComponent('#move1');
+  var node2 = ins.selectAllComponents('#da3')
+  if(node){
+
+    // 获取离开点的坐标数据
+    var touch = event.touches[0] || event.changedTouches[0]
+    //拿出拖动开始时存储的数据
+    var moveE = ins.getState();
+    var x = touch.pageY;
+
+    //计算拖动点与拖动开始时的触发点之间的横坐标之差
+    var gap = x - moveE.startY;
+
+    //重新设置左滑的距离（最大是左滑区域的宽度：80，最小是0）
+    //根据算出来的数据判断是右滑还是左滑？
+    // console.log(gap, "gggg");
+    if(gap>150){
+      node.setStyle({
+        "height": "calc(100vh - 222rpx)",
+      })
+      // for(var i =0;i<node2.length;i++){
+      //   node2[i].setStyle({
+      //     "display": "block",
+      //   })
+      // }
+      ins.callMethod('binddropDwon',{type:true})    
+    }
+    if(gap<-150){
+      node.setStyle({
+        "height": "478rpx",
+      })
+      // for(var i =0;i<node2.length;i++){
+      //   node2[i].setStyle({
+      //     "display": "none",
+      //   })
+      // }
+      ins.callMethod('binddropDwon',{type:false})    
+    }
+  // if (gap < 0) {
+  //     // 左滑
+  //     // 设置左滑最大距离
+  //     node.setStyle({
+  //       "transform": "translateX(-141px)"
+  //     })
+
+  //     // 存储左滑距离
+  //     moveE.rX = -141;
+  //   } else if (gap > 0) {
+  //     //右滑
+  //     //设置左滑最小距离
+  //     node.setStyle({
+  //       "transform": "translateX(0px)"
+  //     })
+  //     // 存储左滑距离
+  //     moveE.rX = 0;
+  //   }
+  }
+
+}
+module.exports = {
+  lwstart:lwstart,
+  lwmove:lwmove,
+  lwend:lwend,
+
+}

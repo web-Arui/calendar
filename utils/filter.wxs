@@ -1,0 +1,255 @@
+function ymr(str){
+  var str2 = str
+  if(str2){
+    return str2.split(' ')[0]
+  }else{
+    return '请选择'
+  }
+}
+function sf(str){
+  var str2 = str
+  if(str2){
+    return str2.split(' ')[2]
+  }else{
+    return '请选择'
+  }
+}
+function indexsf(str){//显示时分
+  var str2 = str
+  if(str2){
+    return str2.split(' ')[1]
+  }else{
+    return ''
+  }
+}
+function day(str){
+  var str2 = str.toString()
+  return str2.split('-')[2]
+}
+
+function time1(str){
+  var str2 = str
+  if(str2){
+    return str2.split(' ')[0]
+  }else{
+    return str2
+  }
+}
+function right(str){
+  var str2 = str.toString()
+  return str2.split('')[1]
+}
+function three(str){
+  var str2 = str.toString()
+  return str2.split('')[2]
+}
+function cennum(str){
+  var str2 = str
+  return Math.floor(str2*100)
+}
+function xia(str){
+  return Math.floor(str)
+}
+function numm(str){
+  var str2 = str
+  return Number(str2)
+}
+function zhang(str){
+  var str2 = str
+  if(str2.length>52){
+    return str2.substring(0,52)+'...'
+  }else{
+    return str2
+  }
+}
+function zhang2(str){
+  var str2 = str
+  if(str2.length>52&&str){
+    return str2.substring(0,252)+'...'
+  }else{
+    return str2
+  }
+}
+function tihuan(str){
+  var str2 = str
+  var res = str2.split('>')
+  return res[0]+'-'+res[1]+'-'+res[2]
+}
+function phone(str){//手机号
+  var str2 =str
+  if(str2&&str2!='null'){
+    return str2.substring(0,3)+'****'+str2.substring(7)
+  }else{
+    return str2
+  }
+}
+
+function lwstart(event,ins){
+  // 获取事件触发点的坐标数据
+  var touch = event.touches[0] || event.changedTouches[0]
+  //存储坐标数据，后期使用
+  var moveE = ins.getState();
+  moveE.startX = touch.pageX;
+  moveE.startY = touch.pageY;
+
+  //默认左滑当前的距离，也要存储起来
+  if (!moveE.rX) {
+    moveE.rX = 0;
+  }
+  
+}
+// 拖动中时的事件
+function lwmove(event, ins) {
+  //获取到该组件的id
+  var id = event.currentTarget.dataset.id;
+  //组件实例
+  var node = ins.selectComponent(id);
+  if(node){
+    // 获取拖动点的坐标数据
+    var touch = event.touches[0] || event.changedTouches[0]
+    //拿出拖动开始时存储的数据
+    var moveE = ins.getState();
+    //计算拖动点与拖动开始时的触发点之间的横坐标之差
+    var gap = touch.pageX - moveE.startX;
+    //获取左滑的距离（拖动中不存储这个数据，而是拖动结束来存储这个数据）
+    var left = moveE.rX;
+    //为向左滑动做处理，开始设置左滑的距离
+    if (gap < 0) {
+      // 设置组件向左滑的距离
+      node.setStyle({
+        "transform": "translateX(" + (gap + left) + "px)"
+      })
+    }
+    // console.log("拖动中", (gap + left));
+  }
+}
+
+// 拖动结束时的事件
+function lwend(event, ins) {
+  console.log("拖动结束");
+
+  //获取到该组件的id
+  var id = event.currentTarget.dataset.id;
+  //组件实例
+  var node = ins.selectComponent(id);
+  if(node){
+
+    // 获取离开点的坐标数据
+    var touch = event.touches[0] || event.changedTouches[0]
+    //拿出拖动开始时存储的数据
+    var moveE = ins.getState();
+    var x = touch.pageX;
+
+    //计算拖动点与拖动开始时的触发点之间的横坐标之差
+    var gap = x - moveE.startX;
+
+    //重新设置左滑的距离（最大是左滑区域的宽度：80，最小是0）
+    //根据算出来的数据判断是右滑还是左滑？
+    console.log(gap, "gggg");
+  if (gap < 0) {
+      // 左滑
+      // 设置左滑最大距离
+      node.setStyle({
+        "transform": "translateX(-141px)"
+      })
+
+      // 存储左滑距离
+      moveE.rX = -141;
+    } else if (gap > 0) {
+      //右滑
+      //设置左滑最小距离
+      node.setStyle({
+        "transform": "translateX(0px)"
+      })
+      // 存储左滑距离
+      moveE.rX = 0;
+    }
+  }
+
+}
+function bindbei(event,ins){//预约邀请人备注
+  var id = event.currentTarget.dataset.id;
+  var id2 = event.currentTarget.dataset.id2;
+  var pid = event.currentTarget.dataset.pid;
+  var node = ins.selectComponent(id2);
+  console.log(123,id,node,pid)
+  node.setStyle({
+    "transform": "translateX(0px)"
+  })
+  ins.callMethod('bindbei', {id: id,pid:pid})
+}
+function bindwan(event,ins){//预约邀请人完成
+  var id = event.currentTarget.dataset.id;
+  var id2 = event.currentTarget.dataset.id2;
+  var node = ins.selectComponent(id2);
+  console.log(123,id,node)
+  node.setStyle({
+    "transform": "translateX(0px)"
+  })
+  ins.callMethod('bindwan', {
+    id: id
+  })
+}
+function calendarHead(str){
+  var str2 = str
+  if(str2){
+    var time = str2.split('-')
+    return time[0]+'年'+time[1]+'月'
+  }else{
+    return str2
+  }
+}
+function monthri(str){
+  var str2 = str
+  if(str2){
+    var time = str2.split('-')
+    return time[1]+'月'+time[2]+'日'
+  }else{
+    return str2
+  }
+}
+function todotime(str){
+  var str2 = str
+  if(str2){
+    var time = str2.split(' ')[0].split('-')
+    return time[1]+'/'+time[2]
+  }else{
+    return str2
+  }
+}
+function todoti(str){
+  var str2 = str
+  if(str2){
+    var time = str2.split(' ')[0].split('-')
+    var time2 = str2.split(' ')[1]
+    return time[1]+'/'+time[2]+' '+time2
+  }else{
+    return str2
+  }
+}
+
+module.exports = {
+  day:day,
+  right:right,
+  three:three,
+  cennum:cennum,
+  numm:numm,
+  xia:xia,
+  zhang:zhang,
+  time1:time1,
+  tihuan:tihuan,
+  phone:phone,
+  lwstart:lwstart,
+  lwmove:lwmove,
+  lwend:lwend,
+  bindbei:bindbei,
+  bindwan:bindwan,
+  calendarHead:calendarHead,
+  monthri:monthri,
+  todotime:todotime,
+  todoti:todoti,
+  ymr:ymr,
+  sf:sf,
+  zhang2:zhang2,
+  indexsf:indexsf
+}

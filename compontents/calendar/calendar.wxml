@@ -1,0 +1,167 @@
+<!--components/calendar/index.wxml-->
+<wxs src="../../utils/filter.wxs" module="f" />
+<wxs src="./calendar.wxs" module="test" />
+<view class='month'>
+  <!-- <view class='arrow' bindtap='prevMonth'>《 </view> -->
+  <view>
+    <picker mode="date" value="{{date}}" start="2015-09" end="2028-09" fields='month' bindchange="bindDateChange">
+      <view>
+        {{f.calendarHead(date)}}
+      </view>
+    </picker>
+  </view>
+  <!-- <label>
+    <view class="share">
+      <image class="indexshare" src="../../images/new/indexshare.png"></image>
+      <view>分享</view>
+    </view>
+    <button open-type="share" hidden="true"></button>
+  </label> -->
+  <!-- <view class='arrow' bindtap='nextMonth'> 》</view> -->
+</view>
+<view class='container'>
+  <view class='calendar flex column s-center' bindtouchstart="{{test.lwstart}}" bindtouchmove="{{test.lwmove}}"
+    bindtouchend="{{test.lwend}}">
+    <view class='week-row flex m-around wid100'>
+      <view class='grid ml0' wx:for="{{week}}" wx:key='item'>{{item}}</view>
+    </view>
+    <swiper class='swpier-box' circular="true" current="{{swiperIndex}}" bindchange='swiperChange' id="move1"
+      data-id="#move1">
+      <swiper-item class='flex m-around days-table '>
+        <view wx:for="{{calendar.first}}" wx:for-item='x' wx:key='index'
+          class='grid  fw {{x.month === month?"":"notCurrent"}} {{x.date === today?"today":""}} {{x.date == beSelectDate ? "choice":""}} {{x.week=="日"||x.week=="六"?"xiu":""}}'
+          data-month='{{x.month}}' data-day='{{x.day}}' data-date='{{x.date}}' bindtap='bindDayTap'>
+          <view class='view {{x.year+"-"+x.month+"-"+x.day === date+"-01"?"choice2":""}}'>
+            {{x.date === today?'今天':x.day}}</view>
+            <text class='da' wx:if='{{x.state==1}}'>休</text>
+            <text class='da ban' wx:if='{{x.state==2}}'>班</text>
+          <block wx:if="{{x.title.length!=0}}">
+            <view class='da2'>
+              <view class="dian1" wx:if="{{x.type1==1}}"></view>
+              <view class="dian2" wx:if="{{x.type2==2}}"></view>
+              <view class="dian3" wx:if="{{x.type3==3}}"></view>
+            </view>
+            <view class="da3 {{dropDown?'disblock':''}}" wx:if="{{x.title.length!=0}}" id="da3">
+              <block wx:for="{{x.title}}" wx:for-item="it" wx:for-index="index2" wx:key="index2">
+                <view class="da3er {{it.type==2?'da3lv':''}} {{it.type==1?'da3lan':''}}" wx:if="{{index2<2}}">
+                  <block>{{it.name}}</block>
+                </view>
+              </block>
+              <view class="xingmu {{x.type==2?'textlv':''}}" wx:if="{{x.title.length>=2}}">还有{{x.title.length-2}}项</view>
+            </view>
+          </block>
+          <view class='da2' wx:if="{{x.jie}}">
+            <view class="jiejie">{{x.jie}}</view>
+          </view>
+          <!-- <block wx:if="{{workerClockData.length>0}}">
+            <text class='da' wx:if="{{x.year+'-'+x.month+'-'+x.day==item.clockDate}}">休</text>
+            <view class='da2'>
+              <block wx:for="{{workerClockData}}" wx:key="{{index}}">
+                <view class="dian1"></view>
+                <view class="dian2" wx:if="{{item.type==2&&x.year+'-'+x.month+'-'+x.day==item.time}}"></view>
+                <view class="dian3" wx:if="{{item.type==3&&x.year+'-'+x.month+'-'+x.day==item.time}}"></view>
+              </block>
+            </view>
+          </block> -->
+        </view>
+      </swiper-item>
+      <swiper-item class='flex m-around days-table '>
+        <view wx:for="{{calendar.second}}" wx:for-item='x' wx:key='index'
+          class='grid fw {{x.month === month?"":"notCurrent"}} {{x.date === today?"today":""}} {{x.date == beSelectDate ? "choice":""}} {{x.week=="日"||x.week=="六"?"xiu":""}}'
+          data-month='{{x.month}}' data-day='{{x.day}}' data-date='{{x.date}}'
+          data-test='{{(year + "-" +month + "-" + day)}}' bindtap='bindDayTap'>
+          <view class='view {{x.year+"-"+x.month+"-"+x.day === date+"-01"?"choice2":""}}'>
+            {{x.date === today?'今天':x.day}}</view>
+          <text class='da' wx:if='{{x.state==1}}'>休</text>
+          <text class='da ban' wx:if='{{x.state==2}}'>班</text>
+          <block wx:if="{{x.title.length!=0}}">
+            <view class='da2'>
+              <view class="dian1" wx:if="{{x.type1==1}}"></view>
+              <view class="dian2" wx:if="{{x.type2==2}}"></view>
+              <view class="dian3" wx:if="{{x.type3==3}}"></view>
+            </view>
+            <view class="da3 {{dropDown?'disblock':''}}" wx:if="{{x.title.length!=0}}" id="da3">
+              <block wx:for="{{x.title}}" wx:for-item="it" wx:for-index="index2" wx:key="index2">
+                <view class="da3er {{it.type==2?'da3lv':''}} {{it.type==1?'da3lan':''}}" wx:if="{{index2<2}}">
+                  <block>{{it.name}}</block>
+                </view>
+              </block>
+              <view class="xingmu {{x.type==2?'textlv':''}}" wx:if="{{x.title.length>=2}}">还有{{x.title.length-2}}项</view>
+            </view>
+          </block>
+          <view class='da2' wx:if="{{x.jie}}">
+            <view class="jiejie">{{x.jie}}</view>
+          </view>
+        </view>
+      </swiper-item>
+      <swiper-item class='flex m-around days-table'>
+        <view wx:for="{{calendar.third}}" wx:for-item='x' wx:key='index'
+          class='grid fw  {{x.date === today?"today":""}} {{x.date == beSelectDate ? "choice":""}} {{x.month === month?"":"notCurrent"}} {{x.week=="日"||x.week=="六"?"xiu":""}}'
+          data-month='{{x.month}}' data-day='{{x.day}}' data-date='{{x.date}}' bindtap='bindDayTap'>
+          <view class='view {{x.year+"-"+x.month+"-"+x.day === date+"-01"?"choice2":""}}'>
+            {{x.date === today?'今天':x.day}}</view>
+            <text class='da' wx:if='{{x.state==1}}'>休</text>
+            <text class='da ban' wx:if='{{x.state==2}}'>班</text>
+          <block wx:if="{{x.title.length!=0}}">
+            <view class='da2'>
+              <view class="dian1" wx:if="{{x.type1==1}}"></view>
+              <view class="dian2" wx:if="{{x.type2==2}}"></view>
+              <view class="dian3" wx:if="{{x.type3==3}}"></view>
+            </view>
+            <view class="da3 {{dropDown?'disblock':''}}" wx:if="{{x.title.length!=0}}" id="da3">
+              <block wx:for="{{x.title}}" wx:for-item="it" wx:for-index="index2" wx:key="index2">
+                <view class="da3er {{it.type==2?'da3lv':''}} {{it.type==1?'da3lan':''}}" wx:if="{{index2<2}}">
+                  <block>{{it.name}}</block>
+                </view>
+              </block>
+              <view class="xingmu {{x.type==2?'textlv':''}}" wx:if="{{x.title.length>=2}}">还有{{x.title.length-2}}项</view>
+            </view>
+          </block>
+          <view class='da2' wx:if="{{x.jie}}">
+            <view class="jiejie">{{x.jie}}</view>
+          </view>
+          <!-- <block wx:if="{{workerClockData.length>0}}">
+            <text class='da' wx:if="{{x.year+'-'+x.month+'-'+x.day==item.clockDate}}">休</text>
+            <view class='da2'>
+              <block wx:for="{{workerClockData}}" wx:key="{{index}}">
+                <view class="dian1"></view>
+                <view class="dian2" wx:if="{{item.type==2&&x.year+'-'+x.month+'-'+x.day==item.time}}"></view>
+                <view class="dian3" wx:if="{{item.type==3&&x.year+'-'+x.month+'-'+x.day==item.time}}"></view>
+              </block>
+            </view>
+          </block> -->
+        </view>
+      </swiper-item>
+      <swiper-item class='flex m-around days-table '>
+        <view wx:for="{{calendar.fourth}}" wx:for-item='x' wx:key='index'
+          class='grid fw {{x.month === month?"":"notCurrent"}} {{x.date === today?"today":""}} {{x.date == beSelectDate ? "choice":""}} {{x.week=="日"||x.week=="六"?"xiu":""}}'
+          data-month='{{x.month}}' data-day='{{x.day}}' data-date='{{x.date}}' bindtap='bindDayTap'>
+          <view class='view {{x.year+"-"+x.month+"-"+x.day === date+"-01"?"choice2":""}}'>
+            {{x.date === today?'今天':x.day}}</view>
+            <text class='da' wx:if='{{x.state==1}}'>休</text>
+            <text class='da ban' wx:if='{{x.state==2}}'>班</text>
+          <block wx:if="{{x.title.length!=0}}">
+            <view class='da2'>
+              <view class="dian1" wx:if="{{x.type1==1}}"></view>
+              <view class="dian2" wx:if="{{x.type2==2}}"></view>
+              <view class="dian3" wx:if="{{x.type3==3}}"></view>
+            </view>
+            <view class="da3 {{dropDown?'disblock':''}}" wx:if="{{x.title.length!=0}}" id="da3">
+              <block wx:for="{{x.title}}" wx:for-item="it" wx:for-index="index2" wx:key="index2">
+                <view class="da3er {{it.type==2?'da3lv':''}} {{it.type==1?'da3lan':''}}" wx:if="{{index2<2}}">
+                  <block>{{it.name}}</block>
+                </view>
+              </block>
+              <view class="xingmu {{x.type==2?'textlv':''}}" wx:if="{{x.title.length>=2}}">还有{{x.title.length-2}}项</view>
+            </view>
+          </block>
+          <view class='da2' wx:if="{{x.jie}}">
+            <view class="jiejie">{{x.jie}}</view>
+          </view>
+
+        </view>
+      </swiper-item>
+    </swiper>
+  </view>
+  <view class="contbott"></view>
+</view>
